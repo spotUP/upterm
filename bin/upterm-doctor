@@ -13,6 +13,8 @@ import shutil
 import subprocess
 import sys
 
+sys.dont_write_bytecode = True
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 META = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
