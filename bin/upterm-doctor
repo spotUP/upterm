@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""upterm-doctor: check the machine can build the UP-Term kit.
+
+One line per check, with the fix when it fails. Exit 0 when every check
+passes, 1 otherwise. Repos not at their pinned commit are listed as drift;
+drift is information, not a failure.
+
+Environment: UPTERM_ROOT (default: parent of this checkout), VTCON_NDK.
+"""
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+META = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
+from importlib.machinery import SourceFileLoader  # noqa: E402
+
+boot = SourceFileLoader("upterm_bootstrap", os.path.join(HERE, "upterm-bootstrap")).load_module()
+
+FAILED = []
+
+
+def report(ok, what, fix):
+    if ok:
+        print("[OK] " + what)
+    else:
+        print("[FAIL] %s -- fix: %s" % (what, fix))
+        FAILED.append(what)
+
+
+def run(cmd):
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        return r.returncode, r.stdout + r.stderr
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return 127, str(e)
+
+
+def gcc_major(path):
+    rc, out = run([path, "--version"])
+    m = re.search(r"\(GCC\) (\d+)\.(\d+)", out)
+    return (int(m.group(1)), int(m.group(2))) if rc == 0 and m else None
+
+
+def required_python():
+    with open(os.path.join(META, "README.md")) as f:
+        m = re.search(r"python3 >= (\d+)\.(\d+)", f.read())
+    return (int(m.group(1)), int(m.group(2))) if m else (3, 0)
+
+
+def main():
+    root = boot.root_dir()
+    home = os.path.expanduser("~")
+    rc, out = run(["docker", "images", "-q", "ixemul-gcc295"])
+    report(rc == 0 and out.strip() != "", "docker image ixemul-gcc295 present",
+           "start Docker, then: cd %s/ixemul-vtcon && sh docker/build.sh" % root)
+    for prefix, want, label in (("amiga", (6, 5), "6.5"), ("amiga16", (16, 0), "16")):
+        p = os.path.join(home, "opt", prefix, "bin", "m68k-amigaos-gcc")
+        v = gcc_major(p) if os.path.exists(p) else None
+        ok = v is not None and (v == want if want[0] == 6 else v[0] == want[0])
+        report(ok, "%s is gcc %s" % (p.replace(home, "$HOME"), label),
+               "rebuild the toolchain: see toolchain/README.md (pinned commit plus patches)")
+    for tool in ("vc", "vlink", "vasmm68k_mot", "lha"):
+        report(shutil.which(tool) is not None, "%s on PATH" % tool,
+               "brew install vbcc lha" if tool != "lha" else "brew install lha")
+    need = required_python()
+    have = sys.version_info[:2]
+    report(have >= need, "python3 %d.%d (needs >= %d.%d)" % (have + need),
+           "install python3 %d.%d or newer" % need)
+    ndk = os.environ.get("VTCON_NDK") or os.path.join(root, "vtcon", "vendor", "ndk-3.2r4-Include_H")
+    report(os.path.isdir(ndk) and bool(os.listdir(ndk)), "NDK 3.2R4 headers at " + ndk,
+           "unpack the NDK 3.2R4 Include_H drawer there, or set VTCON_NDK")
+    drift = []
+    for r in boot.parse_lock():
+        d = os.path.join(root, r["path"])
+        if not os.path.isdir(os.path.join(d, ".git")):
+            if not r["optional"]:
+                drift.append("%s: not checked out (run upterm-bootstrap)" % r["name"])
+            continue
+        head = boot.git(d, "rev-parse", "HEAD").stdout.strip()
+        if head != r["commit"]:
+            drift.append("%s: at %s, pinned %s" % (r["name"], head[:12], r["commit"][:12]))
+    if drift:
+        print("[INFO] drift from repos.lock (information, not an error):")
+        for l in drift:
+            print("  - " + l)
+    else:
+        print("[OK] every checked-out repo is at its pinned commit")
+    return 1 if FAILED else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

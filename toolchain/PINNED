@@ -1,0 +1,10 @@
+amiga-gcc
+  remote: https://codeberg.org/bebbo/amiga-gcc.git
+  branch: master
+  commit: 511734b9f0bbed2f253ff0cbb48060f7597636ea
+  patch:  patches/amiga-gcc-zlib-darwin.patch
+amiga-gcc15
+  remote: https://codeberg.org/bebbo/amiga-gcc
+  branch: master
+  commit: 6a2b3fb329e98273af88721110a0f6d393057917
+  patch:  patches/amiga-gcc15-gcc16-branch.patch

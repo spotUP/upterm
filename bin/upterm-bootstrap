@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""upterm-bootstrap: clone every repo in repos.lock and check out the pinned commit.
+
+Usage: upterm-bootstrap [--only name...] [--optional] [--update]
+
+Environment:
+  UPTERM_ROOT  workspace directory (default: the parent of this meta-repo checkout)
+  UPTERM_SRC   directory holding existing local checkouts; when set, repos are
+               cloned from <UPTERM_SRC>/<path> instead of from the network
+
+A repo with uncommitted changes is never touched: it is named, its
+`git status --short` line count is printed, and the run moves on; the exit
+status is then 1. --update rewrites repos.lock to the repos' current heads.
+"""
+import os
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+META = os.path.dirname(HERE)
+LOCK = os.path.join(META, "repos.lock")
+
+
+def root_dir():
+    return os.path.abspath(os.environ.get("UPTERM_ROOT") or os.path.dirname(META))
+
+
+def parse_lock(path=LOCK):
+    """Return a list of dicts: name url branch commit path optional."""
+    repos = []
+    optional = False
+    with open(path) as f:
+        for raw in f:
+            line = raw.strip()
+            if not line:
+                continue
+            if line.startswith("#"):
+                if line.lstrip("# ").lower().startswith("optional"):
+                    optional = True
+                continue
+            parts = line.split()
+            if len(parts) not in (4, 5):
+                sys.exit("[ERROR] repos.lock: expected 'name url branch commit [path]': " + line)
+            repos.append({
+                "name": parts[0], "url": parts[1], "branch": parts[2],
+                "commit": parts[3], "path": parts[4] if len(parts) == 5 else parts[0],
+                "optional": optional,
+            })
+    return repos
+
+
+def git(repo, *args, check=True):
+    r = subprocess.run(["git", "-C", repo] + list(args), capture_output=True, text=True)
+    if check and r.returncode != 0:
+        raise RuntimeError("git %s failed in %s: %s" % (" ".join(args), repo, r.stderr.strip()))
+    return r
+
+
+def dirty_count(repo):
+    return len([l for l in git(repo, "status", "--short").stdout.splitlines() if l.strip()])
+
+
+def sync_one(r, root, src):
+    """Return None on success, or an error string."""
+    dest = os.path.join(root, r["path"])
+    if not os.path.isdir(os.path.join(dest, ".git")):
+        if os.path.exists(dest) and os.listdir(dest):
+            return "%s: %s exists and is not a git checkout; move it away" % (r["name"], dest)
+        origin = os.path.join(src, r["path"]) if src else r["url"]
+        if origin.startswith("TBD"):
+            return "%s: url is %s (repository not created yet); set UPTERM_SRC to a local checkout" % (r["name"], origin)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        c = subprocess.run(["git", "clone", "-q", origin, dest], capture_output=True, text=True)
+        if c.returncode != 0:
+            return "%s: clone of %s failed: %s" % (r["name"], origin, c.stderr.strip())
+        print("[OK] %s: cloned from %s" % (r["name"], origin))
+    else:
+        n = dirty_count(dest)
+        if n:
+            return "%s: %d uncommitted change(s) in %s (git status --short); skipped, commit or stash them" % (r["name"], n, dest)
+        f = git(dest, "fetch", "-q", "--all", check=False)
+        if f.returncode != 0:
+            print("[WARN] %s: fetch failed (%s); using what is present" % (r["name"], f.stderr.strip()))
+    if dirty_count(dest):
+        return "%s: tree dirty after clone" % r["name"]
+    if git(dest, "cat-file", "-e", r["commit"] + "^{commit}", check=False).returncode != 0:
+        return "%s: pinned commit %s is not in the repository (not pushed yet?)" % (r["name"], r["commit"])
+    # Prefer the branch when it sits exactly on the pin; else a detached checkout.
+    b = git(dest, "rev-parse", "--verify", "-q", "refs/heads/" + r["branch"], check=False)
+    if b.returncode == 0 and b.stdout.strip() == r["commit"]:
+        git(dest, "checkout", "-q", r["branch"])
+    else:
+        rb = git(dest, "rev-parse", "--verify", "-q", "refs/remotes/origin/" + r["branch"], check=False)
+        if rb.returncode == 0 and rb.stdout.strip() == r["commit"]:
+            git(dest, "checkout", "-q", "-B", r["branch"], r["commit"])
+        else:
+            git(dest, "checkout", "-q", "--detach", r["commit"])
+    head = git(dest, "rev-parse", "HEAD").stdout.strip()
+    if head != r["commit"]:
+        return "%s: HEAD %s, pinned %s" % (r["name"], head, r["commit"])
+    print("[OK] %s at %s" % (r["name"], head[:12]))
+    return None
+
+
+def update_lock(root, repos):
+    cur = {}
+    for r in repos:
+        d = os.path.join(root, r["path"])
+        if not os.path.isdir(os.path.join(d, ".git")):
+            print("[WARN] %s: not checked out, line kept" % r["name"])
+            continue
+        if dirty_count(d):
+            print("[WARN] %s: uncommitted changes; the lock records the commit, not the changes" % r["name"])
+        branch = git(d, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+        cur[r["name"]] = (branch if branch != "HEAD" else r["branch"], git(d, "rev-parse", "HEAD").stdout.strip())
+    out = []
+    with open(LOCK) as f:
+        for raw in f:
+            p = raw.split()
+            if p and not raw.lstrip().startswith("#") and p[0] in cur:
+                p[2], p[3] = cur[p[0]]
+                raw = "  ".join(p) + "\n"
+            out.append(raw)
+    with open(LOCK, "w") as f:
+        f.writelines(out)
+    print("[OK] repos.lock updated")
+
+
+def main(argv):
+    only, update, with_optional = [], False, False
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a == "--update":
+            update = True
+        elif a == "--optional":
+            with_optional = True
+        elif a == "--only":
+            i += 1
+            while i < len(argv) and not argv[i].startswith("--"):
+                only.append(argv[i])
+                i += 1
+            continue
+        elif a in ("-h", "--help"):
+            print(__doc__)
+            return 0
+        else:
+            print("[ERROR] unknown argument " + a, file=sys.stderr)
+            return 2
+        i += 1
+    root = root_dir()
+    src = os.environ.get("UPTERM_SRC")
+    repos = parse_lock()
+    if update:
+        update_lock(root, [r for r in repos if not only or r["name"] in only])
+        return 0
+    unknown = [n for n in only if n not in [r["name"] for r in repos]]
+    if unknown:
+        print("[ERROR] not in repos.lock: " + " ".join(unknown), file=sys.stderr)
+        return 2
+    os.makedirs(root, exist_ok=True)
+    failed = []
+    for r in repos:
+        if only:
+            if r["name"] not in only:
+                continue
+        elif r["optional"] and not with_optional:
+            print("[INFO] %s: optional, skipped (use --optional or --only %s)" % (r["name"], r["name"]))
+            continue
+        err = sync_one(r, root, src)
+        if err:
+            print("[ERROR] " + err, file=sys.stderr)
+            failed.append(r["name"])
+    if failed:
+        print("[ERROR] not synchronised: " + " ".join(failed), file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

@@ -1,0 +1,13 @@
+# name url branch commit [path]   (path defaults to name; relative to UPTERM_ROOT)
+# Written by hand from git remote -v / git rev-parse HEAD; refresh with: bin/upterm-bootstrap --update
+vtcon  https://github.com/spotUP/UP-Term.git  main  bcdebef29e02ebb17773da653eb282bf398624a5
+ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  a9d3e61d26fad7f5237385d2b2d2de8e83dc124d
+upterm-ports  https://github.com/spotUP/upterm-ports.git  main  054ab31b136e1829295cc74a63fc4a53556ae4c1
+neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  c2519212f90d64deef169fbb8e3ecd5a7fad1941
+tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  ac273a6b28d048f02cffbcc014718bb5b8f02948
+cpython-amiga  https://github.com/spotUP/cpython-amiga.git  main  b69fa1b20b1adc144cf4eb0ce4fcf3766a3ebd5d
+screen-amiga  https://github.com/spotUP/screen-amiga.git  main  9b6d82eaf2f08128cc0f948b4f0f10d4caa64e89  screen-amiga/src
+amiga-gcc  https://codeberg.org/bebbo/amiga-gcc.git  master  511734b9f0bbed2f253ff0cbb48060f7597636ea
+amiga-gcc15  https://codeberg.org/bebbo/amiga-gcc  master  6a2b3fb329e98273af88721110a0f6d393057917
+# optional
+dctelnet-vtcon  git@github.com:spotUP/dctelnet.git  feature/vtcon-engine  fafed3692bda7037e511c93b24b2e1b34d817714

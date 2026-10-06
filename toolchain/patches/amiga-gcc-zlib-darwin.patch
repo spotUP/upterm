@@ -1,0 +1,14 @@
+diff --git a/Makefile b/Makefile
+index 7121a8a..1a0c3dc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -471,7 +471,8 @@ ifeq (Darwin, $(findstring Darwin, $(UNAME_S)))
+ 	BREW_PREFIX := $$(brew --prefix)
+ 	CONFIG_GCC += --with-gmp=$(BREW_PREFIX) \
+ 		--with-mpfr=$(BREW_PREFIX) \
+-		--with-mpc=$(BREW_PREFIX)
++		--with-mpc=$(BREW_PREFIX) \
++		--with-system-zlib
+ endif
+ 
+ ifeq (FreeBSD, $(findstring FreeBSD, $(UNAME_S)))
