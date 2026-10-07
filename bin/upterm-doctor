@@ -33,6 +33,10 @@ def report(ok, what, fix):
         FAILED.append(what)
 
 
+def info(ok, what, why):
+    print("[OK] " + what if ok else "[INFO] %s -- optional, needed only for: %s" % (what, why))
+
+
 def run(cmd):
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
@@ -63,8 +67,12 @@ def main():
         p = os.path.join(home, "opt", prefix, "bin", "m68k-amigaos-gcc")
         v = gcc_major(p) if os.path.exists(p) else None
         ok = v is not None and (v == want if want[0] == 6 else v[0] == want[0])
-        report(ok, "%s is gcc %s" % (p.replace(home, "$HOME"), label),
-               "rebuild the toolchain: see toolchain/README.md (pinned commit plus patches)")
+        what = "%s is gcc %s" % (p.replace(home, "$HOME"), label)
+        if want[0] == 6:
+            report(ok, what, "rebuild the toolchain: see toolchain/README.md (pinned commit plus patches)")
+        else:
+            info(ok, what, "the ixemul-vtcon gcc16 track and the stackext A/B "
+                 "(the kit build does not use it; rebuild: toolchain/README.md)")
     for tool in ("vc", "vlink", "vasmm68k_mot", "lha"):
         report(shutil.which(tool) is not None, "%s on PATH" % tool,
                "brew install vbcc lha" if tool != "lha" else "brew install lha")
