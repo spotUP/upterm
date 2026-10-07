@@ -92,6 +92,15 @@ that names each is in the right column; every default hangs off `UPTERM_ROOT`.
 | `SCREEN_BIN` | default `screen-amiga/src/screen` | `make -f Makefile.amiga` in `screen-amiga/src` |
 | `TMUX_BIN` | default `tmux-amiga/build/tmux-bin` | `make -f Makefile.amiga` in tmux-amiga |
 
+Access: `repos.lock` lists `dctelnet-v2`, `amiexpress-doorserver` and
+`dctelnet-vtcon` with ssh URLs (`git@github.com:spotUP/...`); the first is not
+marked optional, so `upterm-bootstrap` fails without access to it, and
+`amiexpress-doorserver` is private. What the kit build takes from `dctelnet-v2`
+is only a Roadshow netinclude for `uptelnet`; without access, bootstrap with
+`--only` for the other repos and give `uptelnet` a `vendor/roadshow-netinclude`
+drawer in vtcon (copy of the NDK's `SANA+RoadshowTCP-IP/netinclude`; that it is
+byte-equal to dctelnet's copy is not verified).
+
 Not needed to build the kit: gcc 16 (`amiga-gcc15`, `~/opt/amiga16`). No Makefile
 of vtcon, upterm-ports, tmux-amiga, screen-amiga, cpython-amiga or neovim-amiga
 names it (searched by grep for `amiga16`); only ixemul-vtcon's
