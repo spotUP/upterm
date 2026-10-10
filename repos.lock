@@ -1,11 +1,11 @@
 # name url branch commit [path]   (path defaults to name; relative to UPTERM_ROOT)
 # Written by hand from git remote -v / git rev-parse HEAD; refresh with: bin/upterm-bootstrap --update
-vtcon  https://github.com/spotUP/UP-Term.git  main  ac3646e1275c04db695f44e42620dbc3f590d43b
-ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  962b5369c61386fa598d57c551269f4bf0272bfc
-upterm-ports  https://github.com/spotUP/upterm-ports.git  main  d6b012df1b34f7876355774d2b5ea97dc2b93fad
+vtcon  https://github.com/spotUP/UP-Term.git  main  c30c530086722ac7bfd87342bd170083617b5ac7
+ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  69feef4b9e87d6d5bbce3b9e496b5613a5bc3f81
+upterm-ports  https://github.com/spotUP/upterm-ports.git  main  ffa4ac29dd8bde5d3ffaf4c91ab041b4f51e78a8
 neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  437797b5add5d207252044161a9ea46b403babb0
 tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  91445ab403d95938c248537e9ab0243f7b8757b4
-cpython-amiga  https://github.com/spotUP/cpython-amiga.git  main  42574f0fb1e0e795f736571e7f955e91851b26a9
+cpython-amiga  https://github.com/spotUP/cpython-amiga.git  main  7eeb0103d3682754b7ca98845553417f7bdc4c8e
 screen-amiga  https://github.com/spotUP/screen-amiga.git  main  bdd6fab585c14b6a46b9beb9e2094520749be52a  screen-amiga/src
 amiga-gcc  https://codeberg.org/bebbo/amiga-gcc.git  master  511734b9f0bbed2f253ff0cbb48060f7597636ea
 amiga-gcc15  https://codeberg.org/bebbo/amiga-gcc  master  6a2b3fb329e98273af88721110a0f6d393057917
