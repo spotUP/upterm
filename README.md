@@ -13,7 +13,7 @@ in "Set up the whole thing".
 
 Each step names the document that has the details. A step marked (not run) was
 written from the scripts and Makefiles on a machine that already had the
-piece, not replayed on a clean one. Paths use `~/Code` as the workspace root;
+piece, not replayed on a clean one. Paths use `~/Code/UP-Term` as the workspace root;
 `UPTERM_ROOT=<dir>` moves it.
 
 1. **The Mac.** macOS with Xcode command line tools and Homebrew. This README,
@@ -49,7 +49,7 @@ Where the other documents live:
 | What the console does per sequence | `vtcon/thoughts/shared/research/2026-09-28_console-conformance-matrix.md` |
 | Each part's own build | `README.md` of tmux-amiga, screen-amiga (`src/Makefile.amiga` head), cpython-amiga, neovim-amiga, upterm-ports, ixemul-vtcon (`docker/`) |
 | DCTelnet with vtcon's engine (optional) | `dctelnet-vtcon/README.md` (its own build environment section) |
-| amiga-pi | the pi coding agent port (`~/Code/amiga-pi`, MIT); in `repos.lock`; `make dist` builds it through `make -C ~/Code/amiga-pi amiga` and the kit ships it as the `UP-Term-pi` archive |
+| amiga-pi | the pi coding agent port (`~/Code/UP-Term/amiga-pi`, MIT); in `repos.lock`; `make dist` builds it through `make -C ~/Code/UP-Term/amiga-pi amiga` and the kit ships it as the `UP-Term-pi` archive |
 
 ## Host prerequisites (macOS)
 
@@ -116,10 +116,10 @@ feeds the userland rig, `vtcon/tools/rig/userland_rig.py`), `dctelnet-vtcon`
 
 After the Build order below (steps 1 to 3 give the artifacts):
 
-    make -C ~/Code/vtcon test                  # optional: host suites
-    make -C ~/Code/vtcon dist                  # every archive below, in build/
-    make -C ~/Code/vtcon dist-pi               # one archive (dist-<id>, id from the table)
-    make -C ~/Code/vtcon dist-check            # each archive lists its Install, Uninstall and Files/VERSIONS
+    make -C ~/Code/UP-Term/vtcon test                  # optional: host suites
+    make -C ~/Code/UP-Term/vtcon dist                  # every archive below, in build/
+    make -C ~/Code/UP-Term/vtcon dist-pi               # one archive (dist-<id>, id from the table)
+    make -C ~/Code/UP-Term/vtcon dist-check            # each archive lists its Install, Uninstall and Files/VERSIONS
 
 The kit is split into a base and four add-ons (`vtcon/dist/packages.txt` is the
 table; plan `vtcon/thoughts/shared/plans/2026-10-13-kit-split.md`). Each archive has its
@@ -146,11 +146,11 @@ moved repo is listed in the kit's `Files/VERSIONS`.
 
 ## Quick start
 
-    git clone <this repo> ~/Code/upterm        # workspace root = its parent: ~/Code
-    ~/Code/upterm/bin/upterm-bootstrap         # clone every repo at its pinned commit
-    ~/Code/upterm/bin/upterm-doctor            # what is missing on this machine
+    git clone <this repo> ~/Code/UP-Term/upterm        # workspace root = its parent: ~/Code/UP-Term
+    ~/Code/UP-Term/upterm/bin/upterm-bootstrap         # clone every repo at its pinned commit
+    ~/Code/UP-Term/upterm/bin/upterm-doctor            # what is missing on this machine
     # toolchains, inputs and parts as in "Set up the whole thing" above, then:
-    make -C ~/Code/vtcon dist                  # the archives of "Build the kit"
+    make -C ~/Code/UP-Term/vtcon dist                  # the archives of "Build the kit"
 
 `UPTERM_ROOT` overrides the workspace directory. `UPTERM_SRC=<dir>` makes the
 bootstrap clone from existing local checkouts (`<dir>/<path>`) instead of the
@@ -170,17 +170,17 @@ its Makefile. The order below is from what each Makefile reads from the others
    `amiga-gcc15` (gcc 16 to `~/opt/amiga16`) is not needed for the kit.
 2. `ixemul-vtcon` (branch `feature/ixemul-80`):
 
-       cd ~/Code/ixemul-vtcon
+       cd ~/Code/UP-Term/ixemul-vtcon
        sh docker/build.sh                     # image ixemul-gcc295 once, then ixemul.library and ixnet.library into build295/
        sh docker/install-sdk-headers.sh       # this repo's header changes into ~/opt/amiga/m68k-amigaos/ixemul/include
        make -C compat && make -C compat install    # libixcompat.a into the SDK lib (tmux, screen, python, neovim link it)
 
 3. The ncurses input (table above), then the userland of the kit:
 
-       make -f Makefile.amiga -C ~/Code/tmux-amiga          # build/tmux-bin
-       make -f Makefile.amiga -C ~/Code/screen-amiga/src    # screen
-       cd ~/Code/cpython-amiga && tools/fetch-cpython.sh && make cc1 compat && tools/configure-m68k.sh && make m68k zip dist   # build/m68k/dist/Python3
-       cd ~/Code/neovim-amiga                               # build/v012/dist/nvim, from Makefile.v012 (order from the script guards, not run):
+       make -f Makefile.amiga -C ~/Code/UP-Term/tmux-amiga          # build/tmux-bin
+       make -f Makefile.amiga -C ~/Code/UP-Term/screen-amiga/src    # screen
+       cd ~/Code/UP-Term/cpython-amiga && tools/fetch-cpython.sh && make cc1 compat && tools/configure-m68k.sh && make m68k zip dist   # build/m68k/dist/Python3
+       cd ~/Code/UP-Term/neovim-amiga                               # build/v012/dist/nvim, from Makefile.v012 (order from the script guards, not run):
        #   make -f Makefile.v012 libs host-deps && tools/configure-nvim012.sh --host   (host nvim first: it makes nlua0)
        #   make -f Makefile.v012 sysroot && tools/configure-nvim012.sh && make -f Makefile.v012 dist
 
@@ -192,7 +192,7 @@ its Makefile. The order below is from what each Makefile reads from the others
    run `make -f Makefile.v012 -n dist` to see what it would do and check the
    owner's handoff `neovim-amiga/thoughts/shared/handoffs/2026-10-03_neovim-0.12.5-links-awaiting-rig.md`.
 4. `upterm-ports` (optional: `make sysroot`, `make <pkg>`; feeds the userland rig).
-5. `amiga-pi` (`make -C ~/Code/amiga-pi UPTERM_ROOT=~/Code amiga`; `make dist` in vtcon runs it itself).
+5. `amiga-pi` (`make -C ~/Code/UP-Term/amiga-pi UPTERM_ROOT=~/Code amiga`; `make dist` in vtcon runs it itself).
 6. `vtcon`: `make dist` ("Build the kit").
 
 ## Which repo for which part
@@ -200,7 +200,7 @@ its Makefile. The order below is from what each Makefile reads from the others
 | Repo | Gives you | Needs |
 |---|---|---|
 | vtcon | the console, shell, tools, the kit | the rest, for `make dist` |
-| amiga-pi | `C:amiga-pi`, the pi coding agent (`UP-Term-pi.lha`) | `~/Code/vtcon` (builds from its core in place), vbcc |
+| amiga-pi | `C:amiga-pi`, the pi coding agent (`UP-Term-pi.lha`) | `~/Code/UP-Term/vtcon` (builds from its core in place), vbcc |
 | ixemul-vtcon | ixemul.library, ixnet.library | Docker, `~/opt/amiga` (NDK headers, libamiga) |
 | upterm-ports | recipes for GNU tools (grep, ncurses, ...) | `~/opt/amiga` |
 | tmux-amiga | tmux 3.6a | `~/opt/amiga`, ixemul-vtcon |
