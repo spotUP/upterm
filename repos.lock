@@ -3,9 +3,9 @@
 vtcon  https://github.com/spotUP/UP-Term.git  main  83199a47bb82822b0a7330a441e38e506e171869
 ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  36517d2debf33f6fd8385f246f7841e9b9449ca8
 upterm-ports  https://github.com/spotUP/upterm-ports.git  main  25c86a798c60184f76884717226b805c3671bb43
-amiga-pi  https://github.com/spotUP/amiga-pi.git  main  d0df02401da2056940fd99696898b2bc95caab91
+amiga-pi  https://github.com/spotUP/amiga-pi.git  main  7d46d16353810c7a3611b81d7d8554a9904f92f5
 neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  86a429ac5efa4084485a6b0e95049eb4968d294a
-tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  943683238ceee31f2b466aea0d15f1d4ed54668c
+tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  0d30fa762ef2035e78c340ca06f360376c605b6e
 cpython-amiga  https://github.com/spotUP/cpython-amiga.git  main  7eeb0103d3682754b7ca98845553417f7bdc4c8e
 screen-amiga  https://github.com/spotUP/screen-amiga.git  main  bdd6fab585c14b6a46b9beb9e2094520749be52a  screen-amiga/src
 amiga-gcc  https://codeberg.org/bebbo/amiga-gcc.git  master  511734b9f0bbed2f253ff0cbb48060f7597636ea
