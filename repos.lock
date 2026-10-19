@@ -12,7 +12,7 @@ amiga-gcc  https://codeberg.org/bebbo/amiga-gcc.git  master  511734b9f0bbed2f253
 amiga-gcc15  https://codeberg.org/bebbo/amiga-gcc  master  6a2b3fb329e98273af88721110a0f6d393057917
 # optional
 # Outside the UP-Term umbrella (their own projects under ~/Code), so their path is relative to it.
-# dctelnet-v2: only vtcon's make te-diff (pcansi vs DCTelnet term engine) and, as a fallback, the Roadshow netinclude for C:uptelnet when vendor/roadshow-netinclude is not unpacked
+# dctelnet-v2: only vtcon's make te-diff (pcansi vs DCTelnet term engine); the Roadshow netinclude now lives in vtcon/third_party
 dctelnet-v2  git@github.com:spotUP/dctelnet-petscii.git  feature/pr-petscii-case-switch  2448df381eda6ad33bc0e18eeed6b414fe88bdaa  ../DCTelnet/dctelnet-v2
 # amiexpress-doorserver: private repo, only vtcon's make te-diff (BBS-art test) uses it
 amiexpress-doorserver  git@github.com:spotUP/amiexpress-doorserver.git  main  969bdd612c795187162611642937df08f2726cb1  ../AmiExpress/amiexpress-doorserver
