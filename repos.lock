@@ -1,13 +1,13 @@
 # name url branch commit [path]   (path defaults to name; relative to UPTERM_ROOT)
 # Written by hand from git remote -v / git rev-parse HEAD; refresh with: bin/upterm-bootstrap --update
-vtcon  https://github.com/spotUP/UP-Term.git  main  3ec3541ac4bc974d84620e56c25a2b72e5cd03c4
-ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  36517d2debf33f6fd8385f246f7841e9b9449ca8
+vtcon  https://github.com/spotUP/UP-Term.git  main  d51a87bf65bed3525eaca73af9798ffea94dca6a
+ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  44264b3264d04433e97cc975f83a62c3545578f9
 upterm-ports  https://github.com/spotUP/upterm-ports.git  main  171cf8be67b7a7e32ff97a9515a56b5e092b6462
 amiga-pi  https://github.com/spotUP/amiga-pi.git  main  2b29ba11810bad6242a5eaeffd850cecc772fb6c
-neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  86a429ac5efa4084485a6b0e95049eb4968d294a
-tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  0d30fa762ef2035e78c340ca06f360376c605b6e
-cpython-amiga  https://github.com/spotUP/cpython-amiga.git  main  7eeb0103d3682754b7ca98845553417f7bdc4c8e
-screen-amiga  https://github.com/spotUP/screen-amiga.git  main  bdd6fab585c14b6a46b9beb9e2094520749be52a  screen-amiga/src
+neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  829f6b01315eff9334a30472e7ba071304bf52a0
+tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  a420e3aea8e3bdd0d1bbaef26c1df80466161805
+cpython-amiga  https://github.com/spotUP/cpython-amiga.git  main  c20154e98daab6a050c65ea82228b7f476a2f69c
+screen-amiga  https://github.com/spotUP/screen-amiga.git  main  93af76e6bebc214fd909912798110ab6239a03c1  screen-amiga/src
 amiga-gcc  https://codeberg.org/bebbo/amiga-gcc.git  master  511734b9f0bbed2f253ff0cbb48060f7597636ea
 amiga-gcc15  https://codeberg.org/bebbo/amiga-gcc  master  6a2b3fb329e98273af88721110a0f6d393057917
 # optional
@@ -15,5 +15,5 @@ amiga-gcc15  https://codeberg.org/bebbo/amiga-gcc  master  6a2b3fb329e98273af887
 # dctelnet-v2: only vtcon's make te-diff (pcansi vs DCTelnet term engine); the Roadshow netinclude now lives in vtcon/third_party
 dctelnet-v2  git@github.com:spotUP/dctelnet-petscii.git  feature/pr-petscii-case-switch  2448df381eda6ad33bc0e18eeed6b414fe88bdaa  ../DCTelnet/dctelnet-v2
 # amiexpress-doorserver: private repo, only vtcon's make te-diff (BBS-art test) uses it
-amiexpress-doorserver  git@github.com:spotUP/amiexpress-doorserver.git  main  969bdd612c795187162611642937df08f2726cb1  ../AmiExpress/amiexpress-doorserver
+amiexpress-doorserver  git@github.com:spotUP/amiexpress-doorserver.git  main  a71f4a5c33706ae78fe8492d26964eb98b92cd6a  ../AmiExpress/amiexpress-doorserver
 dctelnet-vtcon  git@github.com:spotUP/dctelnet.git  feature/vtcon-engine  a233a0d9385edda457912e2e2af000a28baf0e6c  ../DCTelnet/dctelnet-vtcon
