@@ -1,8 +1,8 @@
 # name url branch commit [path]   (path defaults to name; relative to UPTERM_ROOT)
 # Written by hand from git remote -v / git rev-parse HEAD; refresh with: bin/upterm-bootstrap --update
-vtcon  https://github.com/spotUP/UP-Term.git  main  acca84c628ff8c6b20272db89fbeb13665e37a8c
+vtcon  https://github.com/spotUP/UP-Term.git  main  bbf870d2a2aa6fdd659b014db3e713f0dcb43501
 ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  3a546e7b3a0496603c836b0f338d81aaa17846a2
-upterm-ports  https://github.com/spotUP/upterm-ports.git  main  6fd1730466f207767da57723bcceacca65702471
+upterm-ports  https://github.com/spotUP/upterm-ports.git  main  f1518f93a3c72cf8b06161e1262e0b9652a2ff8b
 amiga-pi  https://github.com/spotUP/amiga-pi.git  main  2b29ba11810bad6242a5eaeffd850cecc772fb6c
 neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  829f6b01315eff9334a30472e7ba071304bf52a0
 tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  a420e3aea8e3bdd0d1bbaef26c1df80466161805
