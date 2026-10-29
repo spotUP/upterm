@@ -2,7 +2,7 @@
 # Written by hand from git remote -v / git rev-parse HEAD; refresh with: bin/upterm-bootstrap --update
 vtcon  https://github.com/spotUP/UP-Term.git  main  1c532ef2d0b55d6fb17422e7cad54a3bef2e5d64
 ixemul-vtcon  https://github.com/spotUP/ixemul-vtcon.git  feature/ixemul-80  7ee1a71f241e347c794e8fa2d6310c1d86db6a54
-upterm-ports  https://github.com/spotUP/upterm-ports.git  main  474dd78a9a4e6851074b5cb1872ab69c53183c9c
+upterm-ports  https://github.com/spotUP/upterm-ports.git  main  e2bcbef2d65826d77cbc2647bb69c7a9502c8920
 amiga-pi  https://github.com/spotUP/amiga-pi.git  main  2b29ba11810bad6242a5eaeffd850cecc772fb6c
 neovim-amiga  https://github.com/spotUP/neovim-amiga.git  main  829f6b01315eff9334a30472e7ba071304bf52a0
 tmux-amiga  https://github.com/spotUP/tmux-amiga.git  main  a420e3aea8e3bdd0d1bbaef26c1df80466161805
