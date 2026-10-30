@@ -38,4 +38,16 @@ echo x > "$UPTERM_ROOT/tmux-amiga/dirty-marker"
 grep -q 'tmux-amiga: 1 uncommitted' "$tmp/boot3.log" && ok "dirty repo named with its count" || bad "dirty repo not named"
 grep -q 'vtcon at' "$tmp/boot3.log" && ok "clean repo still processed" || bad "clean repo skipped"
 
+# 5. --update records a checkout whose .git is a FILE (git worktree, submodule)
+meta="$tmp/meta"; mkdir -p "$meta/bin" "$tmp/wt"
+cp "$here/bin/upterm-bootstrap" "$meta/bin/"
+git init -q "$tmp/wt/main" && git -C "$tmp/wt/main" commit -q --allow-empty -m one
+git -C "$tmp/wt/main" worktree add -q -b wtbranch "$tmp/wt/linked" 2>/dev/null
+want=$(git -C "$tmp/wt/linked" rev-parse HEAD)
+echo "linked  file:///none  oldbranch  0000000000000000000000000000000000000000  linked" > "$meta/repos.lock"
+UPTERM_ROOT="$tmp/wt" "$meta/bin/upterm-bootstrap" --update > "$tmp/boot4.log" 2>&1
+[ -f "$tmp/wt/linked/.git" ] && ok "worktree has a .git file" || bad "worktree has no .git file"
+grep -q "^linked  file:///none  wtbranch  $want  linked\$" "$meta/repos.lock" \
+  && ok "--update records a .git-file checkout" || { bad "--update kept the row of a .git-file checkout"; cat "$meta/repos.lock" "$tmp/boot4.log"; }
+
 exit $fail

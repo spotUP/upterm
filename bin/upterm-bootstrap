@@ -56,6 +56,11 @@ def git(repo, *args, check=True):
     return r
 
 
+def is_checkout(d):
+    # A linked worktree or submodule has a .git file, not a directory.
+    return os.path.exists(os.path.join(d, ".git"))
+
+
 def dirty_count(repo):
     return len([l for l in git(repo, "status", "--short").stdout.splitlines() if l.strip()])
 
@@ -63,7 +68,7 @@ def dirty_count(repo):
 def sync_one(r, root, src):
     """Return None on success, or an error string."""
     dest = os.path.join(root, r["path"])
-    if not os.path.isdir(os.path.join(dest, ".git")):
+    if not is_checkout(dest):
         if os.path.exists(dest) and os.listdir(dest):
             return "%s: %s exists and is not a git checkout; move it away" % (r["name"], dest)
         origin = os.path.join(src, r["path"]) if src else r["url"]
@@ -106,7 +111,7 @@ def update_lock(root, repos):
     cur = {}
     for r in repos:
         d = os.path.join(root, r["path"])
-        if not os.path.isdir(os.path.join(d, ".git")):
+        if not is_checkout(d):
             print("[WARN] %s: not checked out, line kept" % r["name"])
             continue
         if dirty_count(d):
