@@ -16,4 +16,4 @@ amiga-gcc15  https://codeberg.org/bebbo/amiga-gcc  master  6a2b3fb329e98273af887
 dctelnet-v2  git@github.com:spotUP/dctelnet-petscii.git  feature/pr-petscii-case-switch  2448df381eda6ad33bc0e18eeed6b414fe88bdaa  ../DCTelnet/dctelnet-v2
 # amiexpress-doorserver: private repo, only vtcon's make te-diff (BBS-art test) uses it
 amiexpress-doorserver  git@github.com:spotUP/amiexpress-doorserver.git  main  a71f4a5c33706ae78fe8492d26964eb98b92cd6a  ../AmiExpress/amiexpress-doorserver
-dctelnet-vtcon  git@github.com:spotUP/dctelnet.git  feature/vtcon-engine  a233a0d9385edda457912e2e2af000a28baf0e6c  ../DCTelnet/dctelnet-vtcon
+dctelnet-vtcon  git@github.com:spotUP/dctelnet.git  feature/pr-vtcon-engine  38d5f498b95794f9b6b501c9b7a771e0fe5a5249  ../DCTelnet/dctelnet-vtcon
